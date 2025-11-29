@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { Plus, AlertCircle } from "lucide-react-native";
 
-import Colors from "@/constants/colors";
+import Colors, { categoryColors } from "@/constants/colors";
 import { playTapSound } from "@/utils/tapSound";
 import { useApp } from "@/contexts/AppContext";
 import { expenseCategories } from "@/constants/categories";
@@ -42,10 +42,12 @@ export default function BudgetsScreen() {
       const percentage = limit > 0 ? (spent / limit) * 100 : 0;
       const remaining = limit - spent;
 
+      const categoryColor = categoryColors[category.id as keyof typeof categoryColors] || category.color || "#95A5A6";
+
       return {
         category: category.name,
         categoryId: category.id,
-        color: category.color,
+        color: categoryColor,
         spent,
         limit,
         remaining,

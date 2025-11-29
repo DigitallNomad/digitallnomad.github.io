@@ -265,7 +265,7 @@ export default function HomeScreen() {
           onRequestClose={handleCloseModal}
         >
           <View style={styles.modalOverlay}>
-            <View style={[styles.modalContainer, { backgroundColor: currentColors.background }]}>
+            <View style={[styles.modalContainer, { backgroundColor: currentColors.background, paddingBottom: Math.max(insets.bottom, 20) }]}>
               <View style={[styles.modalHeader, { backgroundColor: currentColors.cardBackground, borderBottomColor: currentColors.border }]}>
                 <Text style={[styles.modalTitle, { color: currentColors.text }]}>Transaction Details</Text>
                 <TouchableOpacity
@@ -599,7 +599,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     maxHeight: "85%",
-    paddingBottom: 30,
   },
   modalHeader: {
     flexDirection: "row",

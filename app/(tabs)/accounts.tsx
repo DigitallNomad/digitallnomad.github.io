@@ -208,7 +208,7 @@ export default function AccountsScreen() {
           onRequestClose={handleCloseModal}
         >
           <View style={styles.modalOverlay}>
-            <View style={[styles.modalContainer, { backgroundColor: currentColors.background }]}>
+            <View style={[styles.modalContainer, { backgroundColor: currentColors.background, paddingBottom: Math.max(insets.bottom, 20) }]}>
               <View style={[styles.modalHeader, { backgroundColor: currentColors.cardBackground, borderBottomColor: currentColors.border }]}>
                 <Text style={[styles.modalTitle, { color: currentColors.text }]}>
                   {selectedAccount?.name} Transactions
@@ -537,7 +537,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     maxHeight: "80%",
-    paddingBottom: 20,
   },
   modalHeader: {
     flexDirection: "row",
