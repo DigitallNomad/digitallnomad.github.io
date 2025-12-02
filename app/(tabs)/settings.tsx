@@ -6,10 +6,11 @@ import {
   TouchableOpacity,
   Switch,
   Modal,
+  Linking,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { Globe, RotateCcw, Moon, Sun, Volume2, VolumeX } from "lucide-react-native";
+import { Globe, RotateCcw, Moon, Sun, Volume2, VolumeX, Shield, FileText } from "lucide-react-native";
 import { useState } from "react";
 
 import Colors from "@/constants/colors";
@@ -69,6 +70,16 @@ export default function SettingsScreen() {
   const handleToggleTapSound = (value: boolean) => {
     playTapSound(value);
     updateTapSound(value);
+  };
+
+  const handleOpenPrivacyPolicy = () => {
+    playTapSound(tapSoundEnabled);
+    Linking.openURL("https://sites.google.com/view/expensefox-legal/privacy-policy");
+  };
+
+  const handleOpenTerms = () => {
+    playTapSound(tapSoundEnabled);
+    Linking.openURL("https://sites.google.com/view/expensefox-legal/terms-and-conditions");
   };
 
   return (
@@ -174,6 +185,55 @@ export default function SettingsScreen() {
                 thumbColor="#FFFFFF"
               />
             </View>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: currentColors.textSecondary }]}>
+            LEGAL
+          </Text>
+          <View style={[styles.card, { backgroundColor: currentColors.cardBackground, borderColor: currentColors.border }]}>
+            <TouchableOpacity
+              style={styles.settingItem}
+              onPress={handleOpenPrivacyPolicy}
+              activeOpacity={0.7}
+            >
+              <View style={styles.settingLeft}>
+                <View style={[styles.iconContainer, { backgroundColor: "#3B82F6" + "20" }]}>
+                  <Shield color="#3B82F6" size={22} />
+                </View>
+                <View>
+                  <Text style={[styles.settingTitle, { color: currentColors.text }]}>
+                    Privacy Policy
+                  </Text>
+                  <Text style={[styles.settingSubtitle, { color: currentColors.textSecondary }]}>
+                    View our privacy policy
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+
+            <View style={[styles.divider, { backgroundColor: currentColors.border }]} />
+
+            <TouchableOpacity
+              style={styles.settingItem}
+              onPress={handleOpenTerms}
+              activeOpacity={0.7}
+            >
+              <View style={styles.settingLeft}>
+                <View style={[styles.iconContainer, { backgroundColor: "#8B5CF6" + "20" }]}>
+                  <FileText color="#8B5CF6" size={22} />
+                </View>
+                <View>
+                  <Text style={[styles.settingTitle, { color: currentColors.text }]}>
+                    Terms & Conditions
+                  </Text>
+                  <Text style={[styles.settingSubtitle, { color: currentColors.textSecondary }]}>
+                    Read our terms of service
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
 
