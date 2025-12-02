@@ -72,13 +72,13 @@ export default function SettingsScreen() {
     updateTapSound(value);
   };
 
-  const handleOpenPrivacyPolicy = () => {
-    playTapSound(tapSoundEnabled);
+  const handleOpenPrivacyPolicy = async () => {
+    await playTapSound(tapSoundEnabled);
     Linking.openURL("https://sites.google.com/view/expensefox-legal/privacy-policy");
   };
 
-  const handleOpenTerms = () => {
-    playTapSound(tapSoundEnabled);
+  const handleOpenTerms = async () => {
+    await playTapSound(tapSoundEnabled);
     Linking.openURL("https://sites.google.com/view/expensefox-legal/terms-and-conditions");
   };
 
