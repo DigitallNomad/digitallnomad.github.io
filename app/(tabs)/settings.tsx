@@ -74,11 +74,13 @@ export default function SettingsScreen() {
 
   const handleOpenPrivacyPolicy = async () => {
     await playTapSound(tapSoundEnabled);
+    await new Promise(resolve => setTimeout(resolve, 150));
     Linking.openURL("https://sites.google.com/view/expensefox-legal/privacy-policy");
   };
 
   const handleOpenTerms = async () => {
     await playTapSound(tapSoundEnabled);
+    await new Promise(resolve => setTimeout(resolve, 150));
     Linking.openURL("https://sites.google.com/view/expensefox-legal/terms-and-conditions");
   };
 
