@@ -31,6 +31,10 @@ function RootLayoutNav() {
     SplashScreen.hideAsync();
   }, [isFirstTime, segments, isLoading, router]);
 
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <>
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
