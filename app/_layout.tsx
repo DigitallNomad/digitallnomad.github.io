@@ -27,7 +27,9 @@ function RootLayoutNav() {
     } else if (!isFirstTime && segments[0] === "welcome") {
       router.replace("/(tabs)");
     }
-  }, [isFirstTime, segments, isLoading]);
+
+    SplashScreen.hideAsync();
+  }, [isFirstTime, segments, isLoading, router]);
 
   return (
     <>
@@ -84,10 +86,6 @@ function RootLayoutNav() {
 }
 
 export default function RootLayout() {
-  useEffect(() => {
-    SplashScreen.hideAsync();
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>
