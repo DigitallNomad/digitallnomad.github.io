@@ -20,6 +20,8 @@ function RootLayoutNav() {
   useEffect(() => {
     if (isLoading) return;
 
+    SplashScreen.hideAsync();
+
     const inAuthGroup = segments[0] === "(tabs)";
 
     if (isFirstTime && inAuthGroup) {
@@ -84,10 +86,6 @@ function RootLayoutNav() {
 }
 
 export default function RootLayout() {
-  useEffect(() => {
-    SplashScreen.hideAsync();
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>
