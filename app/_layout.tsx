@@ -16,20 +16,32 @@ function RootLayoutNav() {
   const segments = useSegments();
   const router = useRouter();
   const currentColors = theme === "dark" ? Colors.dark : Colors.light;
+  const [isNavigationReady, setIsNavigationReady] = React.useState(false);
 
   useEffect(() => {
     if (isLoading) return;
-
-    SplashScreen.hideAsync();
 
     const inAuthGroup = segments[0] === "(tabs)";
 
     if (isFirstTime && inAuthGroup) {
       router.replace("/welcome");
+      setTimeout(() => setIsNavigationReady(true), 50);
     } else if (!isFirstTime && segments[0] === "welcome") {
       router.replace("/(tabs)");
+      setTimeout(() => setIsNavigationReady(true), 50);
+    } else {
+      setIsNavigationReady(true);
     }
-  }, [isFirstTime, segments, isLoading]);
+  }, [isFirstTime, segments, isLoading, router]);
+
+  useEffect(() => {
+    if (!isLoading && isNavigationReady) {
+      const timer = setTimeout(() => {
+        SplashScreen.hideAsync();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, isNavigationReady]);
 
   return (
     <>
