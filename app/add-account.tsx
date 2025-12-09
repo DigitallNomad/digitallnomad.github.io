@@ -10,7 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useState, useMemo } from "react";
-import { ChevronLeft } from "lucide-react-native";
+import { ArrowLeft } from "lucide-react-native";
 
 import Colors from "@/constants/colors";
 import { playTapSound } from "@/utils/tapSound";
@@ -82,7 +82,7 @@ export default function AddAccountScreen() {
             }}
             activeOpacity={0.7}
           >
-            <ChevronLeft color={colors.text} size={28} />
+            <ArrowLeft color={colors.text} size={24} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Add Account</Text>
           <View style={styles.headerRight} />
@@ -230,21 +230,28 @@ const createStyles = (colors: typeof Colors.light) => StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
+    backgroundColor: colors.cardBackground,
   },
   backButton: {
-    padding: 4,
+    width: 40,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: -8,
   },
   headerTitle: {
-    fontSize: 17,
-    fontWeight: "600",
+    fontSize: 20,
+    fontWeight: "700",
     color: colors.text,
+    flex: 1,
+    textAlign: "center",
   },
   headerRight: {
-    width: 36,
+    width: 40,
   },
   scrollView: {
     flex: 1,
@@ -337,6 +344,7 @@ const createStyles = (colors: typeof Colors.light) => StyleSheet.create({
     paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: colors.border,
+    backgroundColor: colors.cardBackground,
   },
   submitButton: {
     borderRadius: 12,
