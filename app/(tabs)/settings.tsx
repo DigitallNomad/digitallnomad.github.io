@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { Globe, RotateCcw, Moon, Sun, Volume2, VolumeX, Shield, FileText } from "lucide-react-native";
+import { Globe, RotateCcw, Moon, Sun, Volume2, VolumeX, Shield, FileText, Layers } from "lucide-react-native";
 import { useState } from "react";
 
 import Colors from "@/constants/colors";
@@ -158,6 +158,31 @@ export default function SettingsScreen() {
               <Text style={[styles.settingValue, { color: currentColors.textSecondary }]}>
                 {currency.symbol}
               </Text>
+            </TouchableOpacity>
+
+            <View style={[styles.divider, { backgroundColor: currentColors.border }]} />
+
+            <TouchableOpacity
+              style={styles.settingItem}
+              onPress={() => {
+                playTapSound(tapSoundEnabled);
+                router.push("/manage-categories");
+              }}
+              activeOpacity={0.7}
+            >
+              <View style={styles.settingLeft}>
+                <View style={[styles.iconContainer, { backgroundColor: "#F59E0B" + "20" }]}>
+                  <Layers color="#F59E0B" size={22} />
+                </View>
+                <View>
+                  <Text style={[styles.settingTitle, { color: currentColors.text }]}>
+                    Manage Categories
+                  </Text>
+                  <Text style={[styles.settingSubtitle, { color: currentColors.textSecondary }]}>
+                    Add or remove custom categories
+                  </Text>
+                </View>
+              </View>
             </TouchableOpacity>
 
             <View style={[styles.divider, { backgroundColor: currentColors.border }]} />

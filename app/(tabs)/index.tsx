@@ -10,19 +10,19 @@ import {
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { Plus, TrendingUp, TrendingDown, X } from "lucide-react-native";
+import { Plus, TrendingUp, TrendingDown, X, ChevronRight } from "lucide-react-native";
 import Colors from "@/constants/colors";
 import { playTapSound } from "@/utils/tapSound";
 import { useApp } from "@/contexts/AppContext";
-import { allCategories } from "@/constants/categories";
 import { format } from "@/utils/date";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const {
     accounts,
     transactions,
+    categories,
     currency,
     theme,
     tapSoundEnabled,
@@ -43,7 +43,32 @@ export default function HomeScreen() {
   const monthlyIncome = getMonthlyIncome();
   const monthlyExpenses = getMonthlyExpenses();
 
-  const recentTransactions = transactions.slice(0, 10);
+  const categoryGroups = useMemo(() => {
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    const monthTransactions = transactions.filter(
+      (t) => t.date.toISOString().slice(0, 7) === currentMonth
+    );
+
+    const groups: Record<string, { category: any; total: number; count: number; type: string; transactions: any[] }> = {};
+
+    monthTransactions.forEach((transaction) => {
+      const categoryId = transaction.category;
+      if (!groups[categoryId]) {
+        groups[categoryId] = {
+          category: getCategoryInfo(categoryId),
+          total: 0,
+          count: 0,
+          type: transaction.type,
+          transactions: [],
+        };
+      }
+      groups[categoryId].total += transaction.amount;
+      groups[categoryId].count += 1;
+      groups[categoryId].transactions.push(transaction);
+    });
+
+    return Object.values(groups).sort((a, b) => b.total - a.total);
+  }, [transactions, categories]);
 
   const handleAddTransaction = () => {
     playTapSound(tapSoundEnabled);
@@ -104,7 +129,7 @@ export default function HomeScreen() {
 
 
   const getCategoryInfo = (categoryId: string) => {
-    return allCategories.find((cat) => cat.id === categoryId);
+    return categories.find((cat) => cat.id === categoryId);
   };
 
   return (
@@ -161,11 +186,10 @@ export default function HomeScreen() {
 
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
-              <Text style={[styles.sectionTitle, { color: currentColors.text }]}>Recent Transactions</Text>
-
+              <Text style={[styles.sectionTitle, { color: currentColors.text }]}>This Month by Category</Text>
             </View>
 
-            {recentTransactions.length === 0 ? (
+            {categoryGroups.length === 0 ? (
               <View style={[styles.emptyState, { backgroundColor: currentColors.cardBackground }]}>
                 <Text style={[styles.emptyStateText, { color: currentColors.text }]}>No transactions yet</Text>
                 <Text style={[styles.emptyStateSubtext, { color: currentColors.textSecondary }]}>
@@ -173,12 +197,11 @@ export default function HomeScreen() {
                 </Text>
               </View>
             ) : (
-              <View style={styles.transactionsList}>
-                {recentTransactions.map((transaction) => {
-                  const category = getCategoryInfo(transaction.category);
+              <View style={styles.categoryGroupsList}>
+                {categoryGroups.map((group) => {
                   const CategoryIcon =
                     require("lucide-react-native")[
-                      category?.icon
+                      group.category?.icon
                         .split("-")
                         .map(
                           (word: string) =>
@@ -189,67 +212,61 @@ export default function HomeScreen() {
 
                   return (
                     <TouchableOpacity
-                      key={transaction.id}
+                      key={group.category?.id}
                       style={[
-                        styles.transactionCard,
-                        transaction.type === "income"
-                          ? [
-                              styles.incomeCard,
-                              {
-                                backgroundColor: theme === "dark" ? "#1A3A31" : "#F0FDF4",
-                                borderLeftColor: currentColors.income,
-                              },
-                            ]
-                          : [
-                              styles.expenseCard,
-                              {
-                                backgroundColor: theme === "dark" ? "#3A1A1A" : "#FEF2F2",
-                                borderLeftColor: theme === "dark" ? currentColors.border : "#9CA3AF",
-                              },
-                            ],
+                        styles.categoryGroupCard,
+                        { backgroundColor: currentColors.cardBackground, borderColor: currentColors.border },
                       ]}
-                      onPress={() => handleTransactionPress(transaction)}
+                      onPress={() => {
+                        playTapSound(tapSoundEnabled);
+                        router.push({
+                          pathname: "/add-transaction",
+                        });
+                      }}
                       activeOpacity={0.7}
                     >
-                      <View style={styles.transactionLeft}>
+                      <View style={styles.categoryGroupLeft}>
                         <View
                           style={[
-                            styles.transactionIcon,
+                            styles.categoryGroupIcon,
                             {
-                              backgroundColor: category?.color
-                                ? category.color + "20"
+                              backgroundColor: group.category?.color
+                                ? group.category.color + "20"
                                 : "#E5E7EB",
                             },
                           ]}
                         >
                           <CategoryIcon
-                            color={category?.color || Colors.light.textSecondary}
-                            size={20}
+                            color={group.category?.color || Colors.light.textSecondary}
+                            size={24}
                           />
                         </View>
-                        <View>
-                          <Text style={[styles.transactionTitle, { color: currentColors.text }]}>
-                            {transaction.description}
+                        <View style={styles.categoryGroupInfo}>
+                          <Text style={[styles.categoryGroupName, { color: currentColors.text }]}>
+                            {group.category?.name || "Unknown"}
                           </Text>
-                          <Text style={[styles.transactionCategory, { color: currentColors.textSecondary }]}>
-                            {category?.name} • {format(transaction.date)}
+                          <Text style={[styles.categoryGroupCount, { color: currentColors.textSecondary }]}>
+                            {group.count} transaction{group.count !== 1 ? "s" : ""}
                           </Text>
                         </View>
                       </View>
-                      <Text
-                        style={[
-                          styles.transactionAmount,
-                          {
-                            color:
-                              transaction.type === "income"
-                                ? currentColors.income
-                                : currentColors.expense,
-                          },
-                        ]}
-                      >
-                        {transaction.type === "income" ? "+" : "-"}{currency.symbol}
-                        {transaction.amount.toFixed(2)}
-                      </Text>
+                      <View style={styles.categoryGroupRight}>
+                        <Text
+                          style={[
+                            styles.categoryGroupTotal,
+                            {
+                              color:
+                                group.type === "income"
+                                  ? currentColors.income
+                                  : currentColors.expense,
+                            },
+                          ]}
+                        >
+                          {group.type === "income" ? "+" : "-"}{currency.symbol}
+                          {group.total.toFixed(2)}
+                        </Text>
+                        <ChevronRight color={currentColors.textSecondary} size={20} />
+                      </View>
                     </TouchableOpacity>
                   );
                 })}
@@ -522,6 +539,56 @@ const styles = StyleSheet.create({
 
   sectionTitle: {
     fontSize: 20,
+    fontWeight: "700",
+  },
+  categoryGroupsList: {
+    gap: 12,
+  },
+  categoryGroupCard: {
+    backgroundColor: Colors.light.cardBackground,
+    borderRadius: 16,
+    padding: 16,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+    borderWidth: 1,
+  },
+  categoryGroupLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    flex: 1,
+  },
+  categoryGroupIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  categoryGroupInfo: {
+    flex: 1,
+  },
+  categoryGroupName: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+  categoryGroupCount: {
+    fontSize: 13,
+  },
+  categoryGroupRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  categoryGroupTotal: {
+    fontSize: 18,
     fontWeight: "700",
   },
   transactionsList: {
