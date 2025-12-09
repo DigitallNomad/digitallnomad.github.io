@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useState, useMemo } from "react";
+import { ChevronLeft } from "lucide-react-native";
 
 import Colors from "@/constants/colors";
 import { playTapSound } from "@/utils/tapSound";
@@ -71,7 +72,21 @@ export default function AddAccountScreen() {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
+      <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+        <View style={styles.header}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => {
+              playTapSound(tapSoundEnabled);
+              router.back();
+            }}
+            activeOpacity={0.7}
+          >
+            <ChevronLeft color={colors.text} size={28} />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Add Account</Text>
+          <View style={styles.headerRight} />
+        </View>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
@@ -210,6 +225,26 @@ const createStyles = (colors: typeof Colors.light) => StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  backButton: {
+    padding: 4,
+  },
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: "600",
+    color: colors.text,
+  },
+  headerRight: {
+    width: 36,
   },
   scrollView: {
     flex: 1,

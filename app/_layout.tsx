@@ -60,11 +60,7 @@ function RootLayoutNav() {
           name="add-account" 
           options={{ 
             presentation: "modal",
-            title: "Add Account",
-            headerStyle: {
-              backgroundColor: currentColors.background,
-            },
-            headerTintColor: currentColors.text,
+            headerShown: false,
           }} 
         />
         <Stack.Screen 
