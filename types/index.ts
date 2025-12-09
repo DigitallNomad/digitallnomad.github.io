@@ -1,6 +1,19 @@
 export type TransactionType = "income" | "expense";
 
-export type CategoryType = string;
+export type CategoryType = 
+  | "food"
+  | "transport"
+  | "shopping"
+  | "entertainment"
+  | "health"
+  | "bills"
+  | "groceries"
+  | "education"
+  | "travel"
+  | "salary"
+  | "freelance"
+  | "investment"
+  | "other";
 
 export interface Account {
   id: string;
@@ -14,7 +27,7 @@ export interface Transaction {
   id: string;
   type: TransactionType;
   amount: number;
-  category: string;
+  category: CategoryType;
   accountId: string;
   description: string;
   date: Date;
@@ -22,17 +35,16 @@ export interface Transaction {
 
 export interface Budget {
   id: string;
-  category: string;
+  category: CategoryType;
   limit: number;
   spent: number;
   month: string;
 }
 
 export interface Category {
-  id: string;
+  id: CategoryType;
   name: string;
   icon: string;
   color: string;
   type: TransactionType;
-  isCustom?: boolean;
 }

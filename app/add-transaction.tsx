@@ -16,16 +16,17 @@ import { Calendar, ArrowLeft } from "lucide-react-native";
 import Colors from "@/constants/colors";
 import { playTapSound } from "@/utils/tapSound";
 import { useApp } from "@/contexts/AppContext";
-import { TransactionType } from "@/types";
+import { expenseCategories, incomeCategories } from "@/constants/categories";
+import { TransactionType, CategoryType } from "@/types";
 import { format } from "@/utils/date";
 
 export default function AddTransactionScreen() {
   const { editId } = useLocalSearchParams<{ editId?: string }>();
-  const { accounts, transactions, categories, currency, theme, tapSoundEnabled, addTransaction, updateTransaction } = useApp();
+  const { accounts, transactions, currency, theme, tapSoundEnabled, addTransaction, updateTransaction } = useApp();
   const [type, setType] = useState<TransactionType>("expense");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
   const [selectedAccount, setSelectedAccount] = useState<string>(accounts[0]?.id || "");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -46,7 +47,7 @@ export default function AddTransactionScreen() {
     }
   }, [editId, transactions]);
 
-  const filteredCategories = categories.filter((c) => c.type === type);
+  const categories = type === "expense" ? expenseCategories : incomeCategories;
 
   const handleSubmit = async () => {
     if (!amount || !selectedCategory || !selectedAccount) {
@@ -199,7 +200,7 @@ export default function AddTransactionScreen() {
           <View style={styles.section}>
             <Text style={[styles.label, { color: currentColors.text }]}>Category</Text>
             <View style={styles.categoryGrid}>
-              {filteredCategories.map((category) => {
+              {categories.map((category) => {
                 const Icon = require("lucide-react-native")[
                   category.icon
                     .split("-")

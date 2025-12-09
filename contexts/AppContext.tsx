@@ -1,9 +1,8 @@
 import createContextHook from "@nkzw/create-context-hook";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { Account, Transaction, Budget, Category } from "@/types";
+import { Account, Transaction, Budget } from "@/types";
 import { initializeTapSound } from "@/utils/tapSound";
-import { defaultCategories } from "@/constants/categories";
 
 const STORAGE_KEYS = {
   ACCOUNTS: "@expensefox_accounts",
@@ -13,7 +12,6 @@ const STORAGE_KEYS = {
   THEME: "@expensefox_theme",
   TAP_SOUND: "@expensefox_tap_sound",
   FIRST_TIME: "@expensefox_first_time",
-  CATEGORIES: "@expensefox_categories",
 };
 
 export const [AppProvider, useApp] = createContextHook(() => {
@@ -48,7 +46,6 @@ export const [AppProvider, useApp] = createContextHook(() => {
   const [tapSoundEnabled, setTapSoundEnabled] = useState<boolean>(true);
   const [isFirstTime, setIsFirstTime] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState(true);
-  const [categories, setCategories] = useState<Category[]>(defaultCategories);
 
   useEffect(() => {
     loadData();
@@ -65,7 +62,6 @@ export const [AppProvider, useApp] = createContextHook(() => {
         themeData,
         tapSoundData,
         firstTimeData,
-        categoriesData,
       ] = await Promise.all([
         AsyncStorage.getItem(STORAGE_KEYS.ACCOUNTS),
         AsyncStorage.getItem(STORAGE_KEYS.TRANSACTIONS),
@@ -74,7 +70,6 @@ export const [AppProvider, useApp] = createContextHook(() => {
         AsyncStorage.getItem(STORAGE_KEYS.THEME),
         AsyncStorage.getItem(STORAGE_KEYS.TAP_SOUND),
         AsyncStorage.getItem(STORAGE_KEYS.FIRST_TIME),
-        AsyncStorage.getItem(STORAGE_KEYS.CATEGORIES),
       ]);
 
       if (accountsData) {
@@ -98,9 +93,6 @@ export const [AppProvider, useApp] = createContextHook(() => {
       }
       if (firstTimeData !== null) {
         setIsFirstTime(JSON.parse(firstTimeData));
-      }
-      if (categoriesData) {
-        setCategories(JSON.parse(categoriesData));
       }
     } catch (error) {
       console.error("Error loading data:", error);
@@ -399,27 +391,6 @@ export const [AppProvider, useApp] = createContextHook(() => {
     }
   }, []);
 
-  const addCategory = useCallback(async (category: Omit<Category, "id" | "isCustom">) => {
-    const newCategory: Category = {
-      ...category,
-      id: Date.now().toString(),
-      isCustom: true,
-    };
-    const updatedCategories = [...categories, newCategory];
-    await AsyncStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(updatedCategories));
-    setCategories(updatedCategories);
-  }, [categories]);
-
-  const deleteCategory = useCallback(async (categoryId: string) => {
-    const category = categories.find((c) => c.id === categoryId);
-    if (!category || !category.isCustom) {
-      return;
-    }
-    const updatedCategories = categories.filter((c) => c.id !== categoryId);
-    await AsyncStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(updatedCategories));
-    setCategories(updatedCategories);
-  }, [categories]);
-
   const resetAllData = useCallback(async () => {
     try {
       const defaultAccounts: Account[] = [
@@ -455,7 +426,6 @@ export const [AppProvider, useApp] = createContextHook(() => {
       setAccounts(defaultAccounts);
       setTransactions([]);
       setBudgets([]);
-      setCategories(defaultCategories);
     } catch (error) {
       console.error("Error resetting data:", error);
       throw error;
@@ -471,7 +441,6 @@ export const [AppProvider, useApp] = createContextHook(() => {
     tapSoundEnabled,
     isFirstTime,
     isLoading,
-    categories,
     addTransaction,
     updateTransaction,
     deleteTransaction,
@@ -485,8 +454,6 @@ export const [AppProvider, useApp] = createContextHook(() => {
     getTotalBalance,
     getMonthlyIncome,
     getMonthlyExpenses,
-    addCategory,
-    deleteCategory,
     resetAllData,
-  }), [accounts, transactions, budgets, currency, theme, tapSoundEnabled, isFirstTime, isLoading, categories, addTransaction, updateTransaction, deleteTransaction, addAccount, removeAccount, updateBudget, updateCurrency, updateTheme, updateTapSound, markAsReturningUser, getTotalBalance, getMonthlyIncome, getMonthlyExpenses, addCategory, deleteCategory, resetAllData]);
+  }), [accounts, transactions, budgets, currency, theme, tapSoundEnabled, isFirstTime, isLoading, addTransaction, updateTransaction, deleteTransaction, addAccount, removeAccount, updateBudget, updateCurrency, updateTheme, updateTapSound, markAsReturningUser, getTotalBalance, getMonthlyIncome, getMonthlyExpenses, resetAllData]);
 });
