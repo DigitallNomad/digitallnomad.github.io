@@ -15,7 +15,7 @@ import Colors from "@/constants/colors";
 import { playTapSound } from "@/utils/tapSound";
 import { useApp } from "@/contexts/AppContext";
 import { format } from "@/utils/date";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -43,6 +43,10 @@ export default function HomeScreen() {
   const monthlyIncome = getMonthlyIncome();
   const monthlyExpenses = getMonthlyExpenses();
 
+  const getCategoryInfo = useCallback((categoryId: string) => {
+    return categories.find((cat) => cat.id === categoryId);
+  }, [categories]);
+
   const categoryGroups = useMemo(() => {
     const currentMonth = new Date().toISOString().slice(0, 7);
     const monthTransactions = transactions.filter(
@@ -68,7 +72,7 @@ export default function HomeScreen() {
     });
 
     return Object.values(groups).sort((a, b) => b.total - a.total);
-  }, [transactions, categories]);
+  }, [transactions, categories, getCategoryInfo]);
 
   const handleAddTransaction = () => {
     playTapSound(tapSoundEnabled);
@@ -124,12 +128,6 @@ export default function HomeScreen() {
   const closeSuccessModal = () => {
     playTapSound(tapSoundEnabled);
     setSuccessModalVisible(false);
-  };
-
-
-
-  const getCategoryInfo = (categoryId: string) => {
-    return categories.find((cat) => cat.id === categoryId);
   };
 
   return (
