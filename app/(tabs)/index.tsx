@@ -45,11 +45,6 @@ export default function HomeScreen() {
 
   const recentTransactions = transactions.slice(0, 10);
 
-  const getDigitCount = (amount: number): number => {
-    const integerPart = Math.floor(amount).toString();
-    return integerPart.length;
-  };
-
   const handleAddTransaction = () => {
     playTapSound(tapSoundEnabled);
     router.push("/add-transaction");
@@ -141,14 +136,14 @@ export default function HomeScreen() {
             <View style={styles.balanceStats}>
               <View style={styles.statItem}>
                 <View style={[styles.statIcon, { backgroundColor: "#E8F5E9" }]}>
-                  <TrendingUp color={Colors.light.income} size={24} />
+                  <TrendingUp color={Colors.light.income} size={20} />
                 </View>
                 <View style={styles.statTextContainer}>
                   <Text style={styles.statLabel}>Income</Text>
                   <Text 
                     style={styles.statValue}
                     numberOfLines={1}
-                    adjustsFontSizeToFit={getDigitCount(monthlyIncome) > 8}
+                    adjustsFontSizeToFit
                     minimumFontScale={0.5}
                   >
                     {currency.symbol}{monthlyIncome.toFixed(2)}
@@ -157,14 +152,14 @@ export default function HomeScreen() {
               </View>
               <View style={styles.statItem}>
                 <View style={[styles.statIcon, { backgroundColor: "#FFEBEE" }]}>
-                  <TrendingDown color={Colors.light.expense} size={24} />
+                  <TrendingDown color={Colors.light.expense} size={20} />
                 </View>
                 <View style={styles.statTextContainer}>
                   <Text style={styles.statLabel}>Expenses</Text>
                   <Text 
                     style={styles.statValue}
                     numberOfLines={1}
-                    adjustsFontSizeToFit={getDigitCount(monthlyExpenses) > 8}
+                    adjustsFontSizeToFit
                     minimumFontScale={0.5}
                   >
                     {currency.symbol}{monthlyExpenses.toFixed(2)}
@@ -504,14 +499,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.15)",
-    padding: 16,
+    padding: 12,
     borderRadius: 16,
     gap: 12,
-    minHeight: 80,
   },
   statIcon: {
-    width: 48,
-    height: 48,
+    width: 40,
+    height: 40,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
@@ -520,14 +514,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   statLabel: {
-    fontSize: 13,
+    fontSize: 12,
     color: "rgba(255, 255, 255, 0.8)",
-    marginBottom: 6,
-    fontWeight: "500",
+    marginBottom: 4,
   },
   statValue: {
-    fontSize: 20,
-    fontWeight: "700",
+    fontSize: 16,
+    fontWeight: "600",
     color: "#FFFFFF",
   },
   section: {
