@@ -509,6 +509,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     gap: 12,
     minHeight: 80,
+    overflow: "hidden",
   },
   statIcon: {
     width: 44,
@@ -519,6 +520,7 @@ const styles = StyleSheet.create({
   },
   statTextContainer: {
     flex: 1,
+    minWidth: 0,
   },
   statLabel: {
     fontSize: 13,
@@ -529,6 +531,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "700",
     color: "#FFFFFF",
+    flexShrink: 1,
   },
   section: {
     marginBottom: 24,
