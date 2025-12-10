@@ -491,11 +491,10 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   balanceStats: {
-    flexDirection: "row",
+    flexDirection: "column",
     gap: 16,
   },
   statItem: {
-    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.15)",
