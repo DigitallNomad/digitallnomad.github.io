@@ -2,7 +2,7 @@ import createContextHook from "@nkzw/create-context-hook";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { Account, Transaction, Budget } from "@/types";
-import { initializeTapSound } from "@/utils/tapSound";
+import { initializeTapSound, playSplashSound } from "@/utils/tapSound";
 
 const STORAGE_KEYS = {
   ACCOUNTS: "@expensefox_accounts",
@@ -48,9 +48,18 @@ export const [AppProvider, useApp] = createContextHook(() => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    loadData();
-    initializeTapSound();
+    const init = async () => {
+      await initializeTapSound();
+      await loadData();
+    };
+    init();
   }, []);
+  
+  useEffect(() => {
+    if (!isLoading) {
+      playSplashSound(tapSoundEnabled);
+    }
+  }, [isLoading, tapSoundEnabled]);
 
   const loadData = async () => {
     try {

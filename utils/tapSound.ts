@@ -4,6 +4,7 @@ import { Audio } from "expo-av";
 
 let tapSound: Audio.Sound | null = null;
 let welcomeSound: Audio.Sound | null = null;
+let splashSound: Audio.Sound | null = null;
 let isInitialized = false;
 
 export async function initializeTapSound() {
@@ -44,6 +45,18 @@ export async function initializeTapSound() {
       }
     );
     welcomeSound = welcome;
+    
+    console.log("[TapSound] Loading splash sound file...");
+    const { sound: splash } = await Audio.Sound.createAsync(
+      require("../assets/sounds/splash.mp3"),
+      { shouldPlay: false, volume: 0.5 },
+      (status) => {
+        if (status.isLoaded) {
+          console.log("[TapSound] Splash sound loaded successfully", status);
+        }
+      }
+    );
+    splashSound = splash;
     
     isInitialized = true;
     console.log("[TapSound] Initialization complete");
@@ -139,5 +152,44 @@ export async function unloadTapSound() {
     }
   }
   
+  if (splashSound) {
+    try {
+      await splashSound.unloadAsync();
+      splashSound = null;
+      console.log("[TapSound] Splash sound unloaded");
+    } catch (error) {
+      console.error("[TapSound] Error unloading splash sound:", error);
+    }
+  }
+  
   isInitialized = false;
+}
+
+export async function playSplashSound(enabled: boolean) {
+  console.log("[SplashSound] called, enabled:", enabled, "Platform:", Platform.OS, "splashSound exists:", !!splashSound);
+
+  if (!enabled) {
+    console.log("[SplashSound] Sound disabled by user, skipping");
+    return;
+  }
+
+  if (Platform.OS !== "web" && splashSound) {
+    try {
+      const status = await splashSound.getStatusAsync();
+      console.log("[SplashSound] Sound status before play:", status);
+      
+      if (status.isLoaded) {
+        console.log("[SplashSound] Sound loaded, playing now...");
+        await splashSound.setPositionAsync(0);
+        await splashSound.playAsync();
+        console.log("[SplashSound] Sound played successfully");
+      } else {
+        console.error("[SplashSound] Sound not loaded");
+      }
+    } catch (error) {
+      console.error("[SplashSound] Error playing sound:", error);
+    }
+  } else {
+    console.log("[SplashSound] Cannot play: Platform:", Platform.OS, "splashSound exists:", !!splashSound);
+  }
 }

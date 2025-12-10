@@ -138,9 +138,14 @@ export default function HomeScreen() {
                 <View style={[styles.statIcon, { backgroundColor: "#E8F5E9" }]}>
                   <TrendingUp color={Colors.light.income} size={20} />
                 </View>
-                <View>
+                <View style={styles.statTextContainer}>
                   <Text style={styles.statLabel}>Income</Text>
-                  <Text style={styles.statValue}>
+                  <Text 
+                    style={styles.statValue}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.5}
+                  >
                     {currency.symbol}{monthlyIncome.toFixed(2)}
                   </Text>
                 </View>
@@ -149,9 +154,14 @@ export default function HomeScreen() {
                 <View style={[styles.statIcon, { backgroundColor: "#FFEBEE" }]}>
                   <TrendingDown color={Colors.light.expense} size={20} />
                 </View>
-                <View>
+                <View style={styles.statTextContainer}>
                   <Text style={styles.statLabel}>Expenses</Text>
-                  <Text style={styles.statValue}>
+                  <Text 
+                    style={styles.statValue}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.5}
+                  >
                     {currency.symbol}{monthlyExpenses.toFixed(2)}
                   </Text>
                 </View>
@@ -499,6 +509,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
+  },
+  statTextContainer: {
+    flex: 1,
   },
   statLabel: {
     fontSize: 12,
