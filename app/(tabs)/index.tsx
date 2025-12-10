@@ -143,7 +143,10 @@ export default function HomeScreen() {
                   <Text 
                     style={styles.statValue}
                     numberOfLines={1}
-                    adjustsFontSizeToFit
+                    adjustsFontSizeToFit={(() => {
+                      const integerPart = Math.floor(monthlyIncome).toString();
+                      return integerPart.length > 8;
+                    })()}
                     minimumFontScale={0.5}
                   >
                     {currency.symbol}{monthlyIncome.toFixed(2)}
@@ -159,7 +162,10 @@ export default function HomeScreen() {
                   <Text 
                     style={styles.statValue}
                     numberOfLines={1}
-                    adjustsFontSizeToFit
+                    adjustsFontSizeToFit={(() => {
+                      const integerPart = Math.floor(monthlyExpenses).toString();
+                      return integerPart.length > 8;
+                    })()}
                     minimumFontScale={0.5}
                   >
                     {currency.symbol}{monthlyExpenses.toFixed(2)}
@@ -499,13 +505,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "rgba(255, 255, 255, 0.15)",
-    padding: 12,
+    padding: 16,
     borderRadius: 16,
     gap: 12,
+    minHeight: 80,
   },
   statIcon: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
@@ -514,13 +521,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: 13,
     color: "rgba(255, 255, 255, 0.8)",
-    marginBottom: 4,
+    marginBottom: 6,
   },
   statValue: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 20,
+    fontWeight: "700",
     color: "#FFFFFF",
   },
   section: {
