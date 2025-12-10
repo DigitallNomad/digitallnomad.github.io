@@ -143,7 +143,7 @@ export default function HomeScreen() {
                   <Text 
                     style={styles.statValue}
                     numberOfLines={1}
-                    adjustsFontSizeToFit={Math.floor(monthlyIncome).toString().length > 8}
+                    adjustsFontSizeToFit
                     minimumFontScale={0.5}
                   >
                     {currency.symbol}{monthlyIncome.toFixed(2)}
@@ -159,7 +159,7 @@ export default function HomeScreen() {
                   <Text 
                     style={styles.statValue}
                     numberOfLines={1}
-                    adjustsFontSizeToFit={Math.floor(monthlyExpenses).toString().length > 8}
+                    adjustsFontSizeToFit
                     minimumFontScale={0.5}
                   >
                     {currency.symbol}{monthlyExpenses.toFixed(2)}
