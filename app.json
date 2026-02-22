@@ -32,7 +32,10 @@
       "permissions": [
         "android.permission.VIBRATE",
         "RECORD_AUDIO"
-      ]
+      ], 
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-2380681170791482~2283033771"
+      }
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
