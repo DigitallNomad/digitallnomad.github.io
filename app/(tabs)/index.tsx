@@ -17,6 +17,7 @@ import { useApp } from "@/contexts/AppContext";
 import { allCategories } from "@/constants/categories";
 import { format } from "@/utils/date";
 import { useState } from "react";
+import AdBanner from "@/components/AdBanner";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -267,6 +268,8 @@ export default function HomeScreen() {
             )}
           </View>
         </ScrollView>
+
+        <AdBanner />
 
         <Modal
           visible={modalVisible}
